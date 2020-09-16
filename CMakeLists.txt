@@ -24,9 +24,9 @@ include_directories(${DEP_PATH}/glfw-src/include)
 include_directories(${DEP_PATH}/glm-src)
 include_directories(${DEP_PATH}/physfs-src/src)
 
-add_executable(HPMSAssimpToHDAT src/tools/AssimpToHDATConverter.cpp src/tools/AssimpImporter.cpp)
+add_executable(HPMSAssimpToHDAT src/HPMSRoomToHDATMain.cpp src/tools/AssimpImporter.cpp)
 
-add_executable(HPMSRoomToHDAT src/tools/RoomToHDATConverter.cpp src/tools/RoomImporter.cpp)
+add_executable(HPMSRoomToHDAT src/HPMSAssimpToHDATMain.cpp src/tools/RoomImporter.cpp)
 
 target_link_libraries(HPMSAssimpToHDAT assimp HPMSEngine)
 
