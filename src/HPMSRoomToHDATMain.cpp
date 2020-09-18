@@ -1,48 +1,45 @@
 /*!
- * File AssimpToHDATConverterMain.h
+ * File HPMSRoomToHDATMain.cpp
  */
 
 #include <string>
 #include <iostream>
-#include <tools/AssimpImporter.h>
+#include <pods/buffers.h>
+#include <logic/RoomModelItem.h>
+#include <tools/RoomImporter.h>
 #include <common/FileSystem.h>
-#include <core/ResourceItemsCache.h>
 
-int Serialize(std::string& filename, std::string& texPath, std::string& outPath);
+
+
+int Serialize(std::string& roomPath, std::string& outPath);
+
 
 int main(int argc, char** argv)
 {
-    if (argc < 3 || argc > 4)
+    if (argc != 3)
     {
-        std::cerr << "Arguments number " << argc - 1 << ", expected 2 or 3" << std::endl;
+        std::cerr << "Arguments number " << argc - 1 << ", expected 2" << std::endl;
         return -1;
     }
 
     std::string outPath(argv[1]);
-    std::string modelPath(argv[2]);
-    std::string texPath("");
-    if (argc == 4)
-    {
-        texPath = std::string(argv[3]);
-    }
+    std::string roomPath(argv[2]);
 
-    std::cout << "Model path: " << modelPath << std::endl;
-    std::cout << "Texture path: " << texPath << std::endl;
+    std::cout << "Room path: " << roomPath << std::endl;
     std::cout << "Output path: " << outPath << std::endl;
 
-    return Serialize(modelPath, texPath, outPath);
 
+    return Serialize(roomPath, outPath);
 }
 
-int Serialize(std::string& modelPath, std::string& texPath, std::string& outPath)
+int Serialize(std::string& roomPath, std::string& outPath)
 {
-    hpms::AdvModelItem* item = hpms::AssimpImporter::LoadModelItem(modelPath, texPath);
-
+    hpms::RoomModelItem* item = hpms::RoomImporter::LoadRoom(roomPath);
     pods::ResizableOutputBuffer out;
     pods::BinarySerializer<decltype(out)> serializer(out);
     if (serializer.save(*item) != pods::Error::NoError)
     {
-        std::cerr << "Error serializing " << modelPath << std::endl;
+        std::cerr << "Error serializing " << roomPath << std::endl;
         hpms::SafeDelete(item);
         return -1;
     }
@@ -60,4 +57,6 @@ int Serialize(std::string& modelPath, std::string& texPath, std::string& outPath
     std::cout << "Serialization completed successfully" << std::endl;
     hpms::SafeDelete(item);
     return 0;
+
+
 }

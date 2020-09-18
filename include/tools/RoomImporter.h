@@ -4,10 +4,9 @@
 
 #pragma once
 
-#include <pugixml.hpp>
 #include <utility>
-#include <logic/RoomModelItem.h"
-#include <common/Utils.h"
+#include <logic/RoomModelItem.h>
+#include <common/Utils.h>
 
 namespace hpms
 {
