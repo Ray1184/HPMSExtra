@@ -123,6 +123,7 @@ void hpms::AssimpImporter::ProcessMesh(aiMesh* aiMesh, std::vector<hpms::Mesh>& 
     std::vector<unsigned int> jointIndices;
     std::vector<float> weights;
     bool textured = false;
+    bool animated = false;
 
     // Process vertices
     for (size_t i = 0; i < aiMesh->mNumVertices; i++)
@@ -171,6 +172,7 @@ void hpms::AssimpImporter::ProcessMesh(aiMesh* aiMesh, std::vector<hpms::Mesh>& 
     // Process bones
     if (aiMesh->HasBones())
     {
+        animated = true;
         std::unordered_map<unsigned int, std::vector<VertexWeight>> weightSet;
         for (size_t i = 0; i < aiMesh->mNumBones; i++)
         {
@@ -232,7 +234,8 @@ void hpms::AssimpImporter::ProcessMesh(aiMesh* aiMesh, std::vector<hpms::Mesh>& 
     mesh.SetWeights(weights);
     mesh.SetVertexCount(indices.size());
     mesh.SetBoundingRadious(boundingRad);
-
+    mesh.SetTextured(textured);
+    mesh.SetAnimated(animated);
 
 
     Material material;

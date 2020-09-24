@@ -10,12 +10,13 @@ include_directories(include)
 # Third party
 include(Shared.cmake)
 
-install_from_repo(https://github.com/Ray1184/HPMSEngine.git HPMSEngine master TRUE /include/)
+set(DEP_PATH ${CMAKE_CURRENT_BINARY_DIR}/_deps)
+set(CREATE_RUNTIME_LIB TRUE)
+install_from_repo(https://github.com/Ray1184/HPMSRuntime.git HPMSRuntime master TRUE /include/)
 
 # Assimp setup
 set(ENABLE_BOOST_WORKAROUND ON)
 set(ASSIMP_NO_EXPORT ON CACHE BOOL "Disable Assimp's export functionality." FORCE)
-set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared lib" FORCE)
 set(ASSIMP_BUILD_3D_IMPORTER OFF CACHE BOOL "Disable 3D" FORCE)
 set(ASSIMP_BUILD_3MF_IMPORTER OFF CACHE BOOL "Disable 3MF" FORCE)
 set(ASSIMP_BUILD_AC_IMPORTER OFF CACHE BOOL "Disable AC" FORCE)
@@ -66,23 +67,24 @@ install_from_repo(https://github.com/g-truc/glm.git GLM master TRUE /)
 
 install_from_repo(https://github.com/mtrempoltsev/pods.git PODS master FALSE /include/)
 
+
 set(DEP_PATH ${CMAKE_CURRENT_BINARY_DIR}/_deps)
 
 include_directories(${DEP_PATH}/glfw-src/include)
 include_directories(${DEP_PATH}/glm-src)
 include_directories(${DEP_PATH}/physfs-src/src)
+include_directories(${DEP_PATH}/hpmsengine-src/include)
 
 add_executable(HPMS3DModelToHDAT src/HPMS3DModelToHDATMain.cpp src/tools/AssimpImporter.cpp)
 
 add_executable(HPMSRoomToHDAT src/HPMSRoomToHDATMain.cpp src/tools/RoomImporter.cpp)
 
-target_link_libraries(HPMS3DModelToHDAT assimp HPMSEngine)
+target_link_libraries(HPMS3DModelToHDAT assimp HPMSRuntime)
 
-target_link_libraries(HPMSRoomToHDAT HPMSEngine)
+target_link_libraries(HPMSRoomToHDAT HPMSRuntime)
 
 # Post build
 set(HPMSENGINE_DLL HPMSEngine${CMAKE_DEBUG_POSTFIX}.dll)
-set(ASSIMP_DLL assimp${CMAKE_DEBUG_POSTFIX}.dll)
 
 add_custom_command(TARGET HPMS3DModelToHDAT
         POST_BUILD
@@ -92,10 +94,7 @@ add_custom_command(TARGET HPMSRoomToHDAT
         POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy ${DEP_PATH}/hpmsengine-build/${HPMSENGINE_DLL} ${CMAKE_CURRENT_BINARY_DIR}/${HPMSENGINE_DLL}
         )
-add_custom_command(TARGET HPMS3DModelToHDAT
-        POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy ${DEP_PATH}/assimp-build/bin/${ASSIMP_DLL} ${CMAKE_CURRENT_BINARY_DIR}/${ASSIMP_DLL}
-        )
+
 
 if (MSYS OR MINGW)
     add_custom_command(TARGET HPMS3DModelToHDAT
