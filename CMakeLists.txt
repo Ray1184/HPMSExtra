@@ -37,7 +37,7 @@ set(SOURCES_M
         src/tools/dae/LibMaterialParser.cpp
         src/tools/dae/LibSkeletonParser.cpp
         src/tools/dae/LibAnimParser.cpp
-        src/tools/dae/LibSinningParser.cpp
+        src/tools/dae/LibSkinningParser.cpp
         src/tools/dae/LibHeaderParser.cpp)
 
 set(SOURCES_R
