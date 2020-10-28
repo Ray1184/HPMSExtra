@@ -12,60 +12,14 @@ include(Shared.cmake)
 
 set(DEP_PATH ${CMAKE_CURRENT_BINARY_DIR}/_deps)
 set(CREATE_RUNTIME_LIB TRUE)
+
 install_from_repo(https://github.com/Ray1184/HPMSRuntime.git HPMSRuntime master TRUE /include/)
-
-# Assimp setup
-set(ENABLE_BOOST_WORKAROUND ON)
-set(ASSIMP_NO_EXPORT ON CACHE BOOL "Disable Assimp's export functionality." FORCE)
-set(ASSIMP_BUILD_3D_IMPORTER OFF CACHE BOOL "Disable 3D" FORCE)
-set(ASSIMP_BUILD_3MF_IMPORTER OFF CACHE BOOL "Disable 3MF" FORCE)
-set(ASSIMP_BUILD_AC_IMPORTER OFF CACHE BOOL "Disable AC" FORCE)
-set(ASSIMP_BUILD_AMF_IMPORTER OFF CACHE BOOL "Disable AMF" FORCE)
-set(ASSIMP_BUILD_ASE_IMPORTER OFF CACHE BOOL "Disable ASE" FORCE)
-set(ASSIMP_BUILD_B3D_IMPORTER OFF CACHE BOOL "Disable B3D" FORCE)
-set(ASSIMP_BUILD_BVH_IMPORTER OFF CACHE BOOL "Disable BVH" FORCE)
-set(ASSIMP_BUILD_COB_IMPORTER OFF CACHE BOOL "Disable COB" FORCE)
-set(ASSIMP_BUILD_CSM_IMPORTER OFF CACHE BOOL "Disable CSM" FORCE)
-set(ASSIMP_BUILD_DXF_IMPORTER OFF CACHE BOOL "Disable DXF" FORCE)
-set(ASSIMP_BUILD_HMP_IMPORTER OFF CACHE BOOL "Disable HMP" FORCE)
-set(ASSIMP_BUILD_IFC_IMPORTER OFF CACHE BOOL "Disable IFC" FORCE)
-set(ASSIMP_BUILD_IRRMESH_IMPORTER OFF CACHE BOOL "Disable IRRMESH" FORCE)
-set(ASSIMP_BUILD_IRR_IMPORTER OFF CACHE BOOL "Disable IRR" FORCE)
-set(ASSIMP_BUILD_LWO_IMPORTER OFF CACHE BOOL "Disable LWO" FORCE)
-set(ASSIMP_BUILD_LWS_IMPORTER OFF CACHE BOOL "Disable LWS" FORCE)
-set(ASSIMP_BUILD_NDO_IMPORTER OFF CACHE BOOL "Disable NDO" FORCE)
-set(ASSIMP_BUILD_NFF_IMPORTER OFF CACHE BOOL "Disable NFF" FORCE)
-set(ASSIMP_BUILD_NONFREE_C4D_IMPORTER OFF CACHE BOOL "Disable C4D" FORCE)
-set(ASSIMP_BUILD_PLY_IMPORTER OFF CACHE BOOL "Disable PLY" FORCE)
-set(ASSIMP_BUILD_SIB_IMPORTER OFF CACHE BOOL "Disable SIB" FORCE)
-set(ASSIMP_BUILD_SMD_IMPORTER OFF CACHE BOOL "Disable SMD" FORCE)
-set(ASSIMP_BUILD_STL_IMPORTER OFF CACHE BOOL "Disable STL" FORCE)
-set(ASSIMP_BUILD_TERRAGEN_IMPORTER OFF CACHE BOOL "Disable Terragen" FORCE)
-set(ASSIMP_BUILD_X3D_IMPORTER OFF CACHE BOOL "Disable X3D" FORCE)
-set(ASSIMP_BUILD_XGL_IMPORTER OFF CACHE BOOL "Disable XGL" FORCE)
-set(ASSIMP_BUILD_X_IMPORTER OFF CACHE BOOL "Disable X" FORCE)
-set(ASSIMP_BUILD_ASSBIN_IMPORTER OFF CACHE BOOL "Disable ASSBIN" FORCE)
-set(ASSIMP_BUILD_MD2_IMPORTER OFF CACHE BOOL "Disable MD2" FORCE)
-set(ASSIMP_BUILD_MD3_IMPORTER OFF CACHE BOOL "Disable MD3" FORCE)
-set(ASSIMP_BUILD_MDC_IMPORTER OFF CACHE BOOL "Disable MDC" FORCE)
-set(ASSIMP_BUILD_MDL_IMPORTER OFF CACHE BOOL "Disable MDL" FORCE)
-set(ASSIMP_BUILD_MS3D_IMPORTER OFF CACHE BOOL "Disable MS3D" FORCE)
-set(ASSIMP_BUILD_OFF_IMPORTER OFF CACHE BOOL "Disable OFF" FORCE)
-set(ASSIMP_BUILD_OPENGEX_IMPORTER OFF CACHE BOOL "Disable OPENGEX" FORCE)
-set(ASSIMP_BUILD_Q3BSP_IMPORTER OFF CACHE BOOL "Disable Q3BSP" FORCE)
-set(ASSIMP_BUILD_Q3D_IMPORTER OFF CACHE BOOL "Disable Q3D" FORCE)
-set(ASSIMP_BUILD_RAW_IMPORTER OFF CACHE BOOL "Disable RAW" FORCE)
-set(ASSIMP_BUILD_GLTF_IMPORTER OFF CACHE BOOL "Disable GLTF" FORCE)
-set(ASSIMP_BUILD_ASSXML_IMPORTER OFF CACHE BOOL "Disable ASSXML" FORCE)
-set(ASSIMP_BUILD_FBX_IMPORTER OFF CACHE BOOL "Disable FBX" FORCE)
-set(ASSIMP_BUILD_MMD_IMPORTER OFF CACHE BOOL "Disable MMD" FORCE)
-
-
-install_from_repo(https://github.com/assimp/assimp.git ASSIMP master TRUE /include/)
 
 install_from_repo(https://github.com/g-truc/glm.git GLM master TRUE /)
 
 install_from_repo(https://github.com/mtrempoltsev/pods.git PODS master FALSE /include/)
+
+install_from_repo(https://github.com/zeux/pugixml.git PUGIXML master TRUE /src/)
 
 
 set(DEP_PATH ${CMAKE_CURRENT_BINARY_DIR}/_deps)
@@ -74,12 +28,27 @@ include_directories(${DEP_PATH}/glfw-src/include)
 include_directories(${DEP_PATH}/glm-src)
 include_directories(${DEP_PATH}/physfs-src/src)
 include_directories(${DEP_PATH}/hpmsengine-src/include)
+include_directories(${DEP_PATH}/pugixml-src/src)
 
-add_executable(HPMS3DModelToHDAT src/HPMS3DModelToHDATMain.cpp src/tools/AssimpImporter.cpp)
+set(SOURCES_M
+        src/tools/LightColladaImporter.cpp
+        src/tools/dae/DaeUtils.cpp
+        src/tools/dae/LibGeometryParser.cpp
+        src/tools/dae/LibMaterialParser.cpp
+        src/tools/dae/LibSkeletonParser.cpp
+        src/tools/dae/LibAnimParser.cpp
+        src/tools/dae/LibSinningParser.cpp
+        src/tools/dae/LibHeaderParser.cpp)
 
-add_executable(HPMSRoomToHDAT src/HPMSRoomToHDATMain.cpp src/tools/RoomImporter.cpp)
+set(SOURCES_R
+        src/tools/RoomImporter.cpp
+        )
 
-target_link_libraries(HPMS3DModelToHDAT assimp HPMSRuntime)
+add_executable(HPMS3DModelToHDAT ${SOURCES_M} src/HPMS3DModelToHDATMain.cpp)
+
+add_executable(HPMSRoomToHDAT ${SOURCES_R} src/HPMSRoomToHDATMain.cpp)
+
+target_link_libraries(HPMS3DModelToHDAT pugixml HPMSRuntime)
 
 target_link_libraries(HPMSRoomToHDAT HPMSRuntime)
 

@@ -4,7 +4,7 @@
 
 #include <string>
 #include <iostream>
-#include <tools/AssimpImporter.h>
+#include <tools/LightColladaImporter.h>
 #include <common/FileSystem.h>
 #include <core/ResourceItemsCache.h>
 
@@ -36,7 +36,7 @@ int main(int argc, char** argv)
 
 int Serialize(std::string& modelPath, std::string& texPath, std::string& outPath)
 {
-    hpms::AdvModelItem* item = hpms::AssimpImporter::LoadModelItem(modelPath, texPath);
+    hpms::AdvModelItem* item = hpms::LightColladaImporter::LoadModelItem(modelPath, texPath);
 
     pods::ResizableOutputBuffer out;
     pods::BinarySerializer<decltype(out)> serializer(out);

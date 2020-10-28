@@ -1,0 +1,4 @@
+/*!
+ * File LibAnimParser.cpp
+ */
+
