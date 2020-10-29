@@ -15,17 +15,16 @@ namespace hpms
     struct SkelTreeData
     {
         std::string boneId;
+        std::string boneSid;
+        std::string boneName;
         std::vector<SkelTreeData> children;
     };
 
     struct VisualData
     {
         SkelTreeData skelData;
-        std::unordered_map<std::string, std::string> materialByMeshId;
-        std::unordered_map<std::string, std::string> boneIdByBoneSid;
-        std::unordered_map<std::string, std::string> boneSidByBoneId;
         std::unordered_map<std::string, std::string> matIdByMeshId;
-        std::unordered_map<std::string, std::string> meshIdByMathId;
+        std::unordered_map<std::string, std::string> meshIdByMatId;
     };
 
     class LibSkeletonParser
