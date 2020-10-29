@@ -15,14 +15,15 @@ namespace hpms
 
     struct SkinningData
     {
-        std::unordered_map<std::string, glm::mat4x4> poseMatrixByBoneId;
+        std::unordered_map<std::string, glm::mat4x4> poseMatrixByBoneSid;
         std::unordered_map<int, std::vector<std::pair<glm::mat4x4, float>>> weightAndTransfMatrixInfluencesByVertexId;
     };
 
     class LibSkinningParser
     {
 
-        static void Process(const SkinningData& skinning, pugi::xml_node& node);
+    public:
+        static void Process(SkinningData& skinning, pugi::xml_node& node);
 
     };
 }

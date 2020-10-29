@@ -34,8 +34,9 @@ set(SOURCES_M
         src/tools/LightColladaImporter.cpp
         src/tools/dae/DaeUtils.cpp
         src/tools/dae/LibGeometryParser.cpp
+        src/tools/dae/LibEffectParser.cpp
         src/tools/dae/LibMaterialParser.cpp
-        src/tools/dae/LibSkeletonParser.cpp
+        src/tools/dae/LibVisualSceneParser.cpp
         src/tools/dae/LibAnimParser.cpp
         src/tools/dae/LibSkinningParser.cpp
         src/tools/dae/LibHeaderParser.cpp)
@@ -48,9 +49,13 @@ add_executable(HPMS3DModelToHDAT ${SOURCES_M} src/HPMS3DModelToHDATMain.cpp)
 
 add_executable(HPMSRoomToHDAT ${SOURCES_R} src/HPMSRoomToHDATMain.cpp)
 
+add_executable(HPMSColladaTest ${SOURCES_M} src/test/HPMSColladaTest.cpp)
+
 target_link_libraries(HPMS3DModelToHDAT pugixml HPMSRuntime)
 
 target_link_libraries(HPMSRoomToHDAT HPMSRuntime)
+
+target_link_libraries(HPMSColladaTest pugixml)
 
 # Post build
 set(HPMSENGINE_DLL HPMSEngine${CMAKE_DEBUG_POSTFIX}.dll)

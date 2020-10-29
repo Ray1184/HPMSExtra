@@ -20,8 +20,8 @@ namespace hpms
 
     class LibSkinningParser
     {
-
-        static void Process(const AnimData& anims, pugi::xml_node& node);
+    public:
+        static void Process(AnimData& anims, pugi::xml_node& node);
 
     };
 }

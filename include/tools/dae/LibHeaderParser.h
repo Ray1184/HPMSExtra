@@ -18,8 +18,8 @@ namespace hpms
 
     class LibHeaderParser
     {
-
-        static void Process(const HeaderData& header, pugi::xml_node& node);
+    public:
+        static void Process(HeaderData& header, pugi::xml_node& node);
 
     };
 }

@@ -12,21 +12,15 @@
 
 namespace hpms
 {
-    struct EffectData
-    {
-        glm::vec3 ambient;
-        glm::vec3 emission;
-        glm::vec3 diffuse;
-        float transparency;
-    };
 
     struct MaterialData
     {
-        std::unordered_map<std::string&, MaterialData>& effectsByMeshId;
+        std::unordered_map<std::string, std::pair<std::string, std::string>> instanceAndNameIdByMatId;
     };
 
     class LibMaterialParser
     {
-        static void Process(const MaterialData& matData, pugi::xml_node& node);
+    public:
+        static void Process(MaterialData& matData, pugi::xml_node& node);
     };
 }
