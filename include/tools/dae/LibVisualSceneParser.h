@@ -12,26 +12,25 @@
 namespace hpms
 {
 
-    struct SkelTreeData
-    {
-        std::string boneId;
-        std::string boneSid;
-        std::string boneName;
-        std::vector<SkelTreeData> children;
-    };
 
     struct VisualData
     {
-        SkelTreeData skelData;
+        bool jointType;
+        std::string boneId;
+        std::string boneSid;
+        std::string boneName;
         std::unordered_map<std::string, std::string> matIdByMeshId;
-        std::unordered_map<std::string, std::string> meshIdByMatId;
+        std::vector<VisualData> children;
     };
 
-    class LibSkeletonParser
+    class LibVisualSceneParser
     {
 
     public:
-        static void Process(const VisualData& visualScene, pugi::xml_node& node);
+        static void Process(VisualData& visualScene, pugi::xml_node& node);
 
+        static void ProcessRecursive(VisualData* data, pugi::xml_node& node);
+
+        static void ProcessMaterialStructure(VisualData* pData, pugi::xml_node& node);
     };
 }

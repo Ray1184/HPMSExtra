@@ -6,6 +6,8 @@
 #include <tools/dae/LibEffectParser.h>
 #include <tools/dae/LibMaterialParser.h>
 #include <tools/dae/LibGeometryParser.h>
+#include <tools/dae/LibVisualSceneParser.h>
+#include <tools/dae/LibSkinningParser.h>
 
 hpms::AdvModelItem* hpms::LightColladaImporter::LoadModelItem(const std::string& path, const std::string& textDirs)
 {
@@ -37,5 +39,15 @@ void hpms::LightColladaImporter::LoadAndProcessModel(const std::string& path, hp
     GeometryData geometryData;
     pugi::xml_node geometryNode = colladaNode.child("library_geometries");
     hpms::LibGeometryParser::Process(geometryData, geometryNode);
+
+    SkinningData skinningData;
+    pugi::xml_node skinningDataNode = colladaNode.child("library_controllers");
+    hpms::LibSkinningParser::Process(skinningData, skinningDataNode);
+
+    VisualData visualData;
+    pugi::xml_node visualNode = colladaNode.child("library_visual_scenes");
+    hpms::LibVisualSceneParser::Process(visualData, visualNode);
+
+
 
 }

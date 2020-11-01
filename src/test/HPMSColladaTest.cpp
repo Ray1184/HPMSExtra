@@ -3,6 +3,8 @@
  */
 
 #include <tools/LightColladaImporter.h>
+#include <string>
+#include <iostream>
 
 int main()
 {

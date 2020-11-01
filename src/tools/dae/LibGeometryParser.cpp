@@ -10,7 +10,7 @@ void hpms::LibGeometryParser::Process(hpms::GeometryData& geomData, pugi::xml_no
 {
     pugi::xml_node geomNode = node.child("geometry");
     std::string modelName = geomNode.attribute("id").as_string();
-    for (pugi::xml_node source : geomNode.child("mesh").children("source"))
+    for (pugi::xml_node& source : geomNode.child("mesh").children("source"))
     {
         if (source.attribute("id").as_string() == modelName + "-positions")
         {
