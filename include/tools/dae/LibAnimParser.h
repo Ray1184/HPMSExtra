@@ -15,10 +15,10 @@ namespace hpms
     struct AnimData
     {
         int frames;
-        std::unordered_map<std::string, std::unordered_map<int, glm::mat4x4>> transfMatrixByFrameByBoneId;
+        std::unordered_map<std::string, std::vector<glm::mat4x4>> transfMatricesByBoneId;
     };
 
-    class LibSkinningParser
+    class LibAnimParser
     {
     public:
         static void Process(AnimData& anims, pugi::xml_node& node);

@@ -70,6 +70,7 @@ std::vector<std::pair<int, int>> hpms::ToPairArray(const std::vector<int>& array
         if (++count % 2 == 0)
         {
             ret.emplace_back(prev[0], prev[1]);
+            prev.clear();
         }
     }
     return ret;

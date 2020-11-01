@@ -68,7 +68,7 @@ void hpms::LibSkinningParser::ProcessInfluences(const std::vector<float>& weight
 
     std::string plainAssignment = node.child("v").child_value();
     std::vector<std::string> assignmentArray = hpms::PlainStringToArray(plainAssignment);
-    std::vector<int> assignmentIntArray = hpms::ToIntArray(influencesArray);
+    std::vector<int> assignmentIntArray = hpms::ToIntArray(assignmentArray);
     std::vector<std::pair<int, int>> assignments = hpms::ToPairArray(assignmentIntArray);
 
     unsigned int vertexId = 0;
@@ -83,8 +83,7 @@ void hpms::LibSkinningParser::ProcessInfluences(const std::vector<float>& weight
             float weight = weights[assignment.second];
             weightAndTransformForVertex.emplace_back(bonePose, weight);
         }
-        data.weightAndTransfMatrixInfluencesByVertexId.insert({vertexId, weightAndTransformForVertex});
-        vertexId++;
+        data.weightAndTransfMatrixInfluencesByVertexId.insert({vertexId++, weightAndTransformForVertex});
     }
 }
 
