@@ -12,7 +12,7 @@
 namespace hpms
 {
 
-    struct AnimData
+    struct AnimFramesData
     {
         int frames;
         std::unordered_map<std::string, std::vector<glm::mat4x4>> transfMatricesByBoneId;
@@ -21,7 +21,7 @@ namespace hpms
     class LibAnimParser
     {
     public:
-        static void Process(AnimData& anims, pugi::xml_node& node);
+        static void Process(AnimFramesData& anims, pugi::xml_node& node);
 
     };
 }

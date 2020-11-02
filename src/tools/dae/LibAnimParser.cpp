@@ -5,7 +5,7 @@
 #include <tools/dae/LibAnimParser.h>
 #include <tools/dae/DaeUtils.h>
 
-void hpms::LibAnimParser::Process(AnimData& anims, pugi::xml_node& node)
+void hpms::LibAnimParser::Process(AnimFramesData& anims, pugi::xml_node& node)
 {
     for (pugi::xml_node& animNode : node.children("animation"))
     {

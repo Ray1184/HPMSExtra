@@ -11,10 +11,7 @@
 namespace hpms
 {
 
-    struct ModelRawData
-    {
 
-    };
 
     class LightColladaImporter
     {
@@ -23,7 +20,6 @@ namespace hpms
 
     private:
 
-        static void LoadAndProcessModel(const std::string& path, ModelRawData& data);
 
     };
 

@@ -45,7 +45,7 @@ set(SOURCES_R
         src/tools/RoomImporter.cpp
         )
 
-add_executable(HPMS3DModelToHDAT ${SOURCES_M} src/HPMS3DModelToHDATMain.cpp)
+add_executable(HPMS3DModelToHDAT ${SOURCES_M} src/HPMS3DModelToHDATMain.cpp src/tools/dae/RawDataParser.cpp)
 
 add_executable(HPMSRoomToHDAT ${SOURCES_R} src/HPMSRoomToHDATMain.cpp)
 

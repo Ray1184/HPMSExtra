@@ -27,7 +27,7 @@ void hpms::LibSkinningParser::Process(SkinningData& skinning, pugi::xml_node& no
 
     }
     pugi::xml_node weightsNode = node.child("controller").child("skin").child("vertex_weights");
-    ProcessInfluences(weights, transforms, skinning, weightsNode);
+    ProcessInfluences(names, weights, transforms, skinning, weightsNode);
 }
 
 
@@ -60,7 +60,7 @@ void hpms::LibSkinningParser::ProcessJointsWeights(std::vector<float>& weights, 
     weights.insert(std::end(weights), std::begin(weightsFloatArray), std::end(weightsFloatArray));
 }
 
-void hpms::LibSkinningParser::ProcessInfluences(const std::vector<float>& weights, const std::vector<glm::mat4x4>& tranforms, hpms::SkinningData& data, pugi::xml_node& node)
+void hpms::LibSkinningParser::ProcessInfluences(const std::vector<std::string>& names, const std::vector<float>& weights, const std::vector<glm::mat4x4>& tranforms, hpms::SkinningData& data, pugi::xml_node& node)
 {
     std::string plainInfluences = node.child("vcount").child_value();
     std::vector<std::string> influencesArray = hpms::PlainStringToArray(plainInfluences);
@@ -75,15 +75,16 @@ void hpms::LibSkinningParser::ProcessInfluences(const std::vector<float>& weight
     unsigned int assignmentIndex = 0;
     for (int influence : influences)
     {
-        std::vector<std::pair<glm::mat4x4, float>> weightAndTransformForVertex;
+        std::vector<std::tuple<std::string, glm::mat4x4, float>> weightAndTransformAndBoneIdForVertex;
         for (int i = 0; i < influence; i++)
         {
             std::pair<int, int> assignment = assignments[assignmentIndex++];
             glm::mat4x4 bonePose = tranforms[assignment.first];
+            std::string boneId = names[assignment.first];
             float weight = weights[assignment.second];
-            weightAndTransformForVertex.emplace_back(bonePose, weight);
+            weightAndTransformAndBoneIdForVertex.emplace_back(boneId, bonePose, weight);
         }
-        data.weightAndTransfMatrixInfluencesByVertexId.insert({vertexId++, weightAndTransformForVertex});
+        data.weightAndTransfMatrixAndBoneIdInfluencesByVertexId.insert({vertexId++, weightAndTransformAndBoneIdForVertex});
     }
 }
 
