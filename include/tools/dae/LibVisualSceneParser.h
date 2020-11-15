@@ -31,6 +31,6 @@ namespace hpms
 
         static void ProcessRecursive(VisualData* data, pugi::xml_node& node);
 
-        static void ProcessMaterialStructure(VisualData* pData, pugi::xml_node& node);
+        static void ProcessMaterialStructure(hpms::VisualData& rootData, VisualData* pData, pugi::xml_node& node);
     };
 }

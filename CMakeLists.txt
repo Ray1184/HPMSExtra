@@ -39,23 +39,20 @@ set(SOURCES_M
         src/tools/dae/LibVisualSceneParser.cpp
         src/tools/dae/LibAnimParser.cpp
         src/tools/dae/LibSkinningParser.cpp
-        src/tools/dae/LibHeaderParser.cpp)
+        src/tools/dae/LibHeaderParser.cpp
+        src/tools/RawDataParser.cpp)
 
 set(SOURCES_R
         src/tools/RoomImporter.cpp
         )
 
-add_executable(HPMS3DModelToHDAT ${SOURCES_M} src/HPMS3DModelToHDATMain.cpp src/tools/dae/RawDataParser.cpp)
+add_executable(HPMS3DModelToHDAT ${SOURCES_M} src/HPMS3DModelToHDATMain.cpp)
 
 add_executable(HPMSRoomToHDAT ${SOURCES_R} src/HPMSRoomToHDATMain.cpp)
-
-add_executable(HPMSColladaTest ${SOURCES_M} src/test/HPMSColladaTest.cpp)
 
 target_link_libraries(HPMS3DModelToHDAT pugixml HPMSRuntime)
 
 target_link_libraries(HPMSRoomToHDAT HPMSRuntime)
-
-target_link_libraries(HPMSColladaTest pugixml)
 
 # Post build
 set(HPMSENGINE_DLL HPMSEngine${CMAKE_DEBUG_POSTFIX}.dll)

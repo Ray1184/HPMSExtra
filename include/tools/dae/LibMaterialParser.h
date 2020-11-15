@@ -13,7 +13,7 @@
 namespace hpms
 {
 
-    struct MaterialData
+    struct MaterialDefData
     {
         std::unordered_map<std::string, std::pair<std::string, std::string>> instanceAndNameIdByMatId;
     };
@@ -21,6 +21,6 @@ namespace hpms
     class LibMaterialParser
     {
     public:
-        static void Process(MaterialData& matData, pugi::xml_node& node);
+        static void Process(MaterialDefData& matData, pugi::xml_node& node);
     };
 }

@@ -33,21 +33,22 @@ void hpms::LibVisualSceneParser::ProcessRecursive(hpms::VisualData* data, pugi::
         {
             visualScene.jointType = false;
             visualScene.boneSid = visualScene.boneId;
-            ProcessMaterialStructure(&visualScene, child);
+            ProcessMaterialStructure(*data, &visualScene, child);
         }
 
         data->children.push_back(visualScene);
     }
 }
 
-void hpms::LibVisualSceneParser::ProcessMaterialStructure(hpms::VisualData* data, pugi::xml_node& node)
+void hpms::LibVisualSceneParser::ProcessMaterialStructure(hpms::VisualData& rootData, hpms::VisualData* data, pugi::xml_node& node)
 {
     pugi::xml_node techNode = node.child("instance_controller").child("bind_material").child("technique_common");
     for (pugi::xml_node child : techNode.children("instance_material"))
     {
         std::string meshId = child.attribute("symbol").as_string();
         std::string matId = child.attribute("target").as_string();
-        data->matIdByMeshId.insert({meshId, matId});
+        matId = matId.replace(0, 1, ""); // First url character is '#', remove it for recreate material id.
+        rootData.matIdByMeshId.insert({meshId, matId});
     }
 }
 

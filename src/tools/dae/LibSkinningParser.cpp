@@ -80,11 +80,11 @@ void hpms::LibSkinningParser::ProcessInfluences(const std::vector<std::string>& 
         {
             std::pair<int, int> assignment = assignments[assignmentIndex++];
             glm::mat4x4 bonePose = tranforms[assignment.first];
-            std::string boneId = names[assignment.first];
+            std::string boneSid = names[assignment.first];
             float weight = weights[assignment.second];
-            weightAndTransformAndBoneIdForVertex.emplace_back(boneId, bonePose, weight);
+            weightAndTransformAndBoneIdForVertex.emplace_back(boneSid, bonePose, weight);
         }
-        data.weightAndTransfMatrixAndBoneIdInfluencesByVertexId.insert({vertexId++, weightAndTransformAndBoneIdForVertex});
+        data.weightAndTransfMatrixAndBoneSidInfluencesByVertexId.insert({vertexId++, weightAndTransformAndBoneIdForVertex});
     }
 }
 

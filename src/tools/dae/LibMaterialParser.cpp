@@ -5,7 +5,7 @@
 #include <tools/dae/LibMaterialParser.h>
 #include <tools/dae/DaeUtils.h>
 
-void hpms::LibMaterialParser::Process(hpms::MaterialData& matData, pugi::xml_node& node)
+void hpms::LibMaterialParser::Process(hpms::MaterialDefData& matData, pugi::xml_node& node)
 {
     for (pugi::xml_node mat : node.children("material"))
     {

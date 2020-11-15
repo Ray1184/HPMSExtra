@@ -4,10 +4,14 @@
 
 #pragma once
 
+#include <common/Utils.h>
 #include <core/AdvModelItem.h>
 #include <string>
 #include <pugixml.hpp>
-#include <tools/dae/RawDataParser.h>
+#include <tools/RawDataParser.h>
+
+#define MAX_WEIGHTS 4
+#define NO_BONE_MATCH "__no_bone_match__"
 
 namespace hpms
 {
@@ -138,29 +142,26 @@ namespace hpms
         static AdvModelItem* LoadModelItem(const std::string& path, const std::string& textDirs);
 
     private:
-        static void ProcessMaterial(const MaterialData& matData, std::vector<Material>& materials, std::string& textDirs);
 
-        static void ProcessMesh(const MeshData& meshData, std::vector<Mesh>& meshes, std::vector<Material>& materials,
-                                std::vector<Bone>& bones);
+        static void ProcessMesh(const hpms::MeshData& meshData, std::vector<Mesh>& meshes,
+                                std::vector<Bone>& bones, const std::string& textDirs);
 
 
         static void
-        ProcessAnimations(const RawData& rawData, std::vector<Bone>& bones, AnimNode* rootNode, glm::mat4 rootTransform,
+        ProcessAnimations(const AnimData& animData, std::vector<Bone>& bones, AnimNode* rootNode,
+                          glm::mat4 rootTransform,
                           std::vector<hpms::Animation>& animations);
 
-        static void BuildAnimationFrames(std::vector<Bone>& bones, AnimNode* animRootNode, glm::mat4 rootTransform,
+        static void BuildAnimationFrames(const AnimData& animData, std::vector<Bone>& bones, AnimNode* animRootNode, glm::mat4 rootTransform,
                                          std::vector<hpms::Frame>& animationFrames);
 
-        inline static AnimNode* ProcessGraph(aiNode* aiNod, AnimNode* parent)
+        inline static AnimNode* ProcessGraph(SkelData& skelData, AnimNode* parent)
         {
-            std::string nodeName = aiNod->mName.data;
-            //AnimNode* animNode = new AnimNode(nodeName, parent);
+            std::string nodeName = skelData.boneName;
             AnimNode* animNode = hpms::SafeNew<AnimNode>(nodeName, parent);
-            unsigned int numChildren = aiNod->mNumChildren;
-            for (int i = 0; i < numChildren; i++)
+            for (auto& child : skelData.children)
             {
-                aiNode* aiChildNod = aiNod->mChildren[i];
-                AnimNode* childAnimNode = ProcessGraph(aiChildNod, animNode);
+                AnimNode* childAnimNode = ProcessGraph(child, animNode);
                 animNode->AddChild(childAnimNode);
             }
             return animNode;
@@ -186,38 +187,12 @@ namespace hpms
             return res;
         }
 
-        inline static void BuildTransFormationMatrices(aiNodeAnim* aiNodAnim, AnimNode* animNode)
+        inline static void
+        BuildTransFormationMatrices(const std::vector<glm::mat4x4>& channelTransforms, AnimNode* animNode)
         {
-            unsigned int numFrames = aiNodAnim->mNumPositionKeys;
-
-            aiVectorKey* posKeys = aiNodAnim->mPositionKeys;
-            aiVectorKey* scaleKeys = aiNodAnim->mScalingKeys;
-            aiQuatKey* rotKeys = aiNodAnim->mRotationKeys;
-
-            for (int i = 0; i < numFrames; i++)
+            for (auto& transf : channelTransforms)
             {
-                aiVectorKey posKey = posKeys[i];
-                aiVector3D vec = posKey.mValue;
-
-                glm::mat4 transfMat(1.0);
-                transfMat = glm::translate(transfMat, glm::vec3(vec.x, vec.y, vec.z));
-
-                aiQuatKey quatKey = rotKeys[i];
-                aiQuaternion quat = quatKey.mValue;
-
-                glm::quat rot(quat.w, quat.x, quat.y, quat.z);
-                glm::mat4 rotMat = glm::mat4_cast(rot);
-                transfMat = transfMat * rotMat;
-
-                if (i < aiNodAnim->mNumScalingKeys)
-                {
-                    posKey = scaleKeys[i];
-                    vec = posKey.mValue;
-                    transfMat = glm::scale(transfMat, glm::vec3(vec.x, vec.y, vec.z));
-                }
-
-
-                animNode->AddTransform(transfMat);
+                animNode->AddTransform(transf);
             }
         }
 
@@ -255,6 +230,22 @@ namespace hpms
             }
             glm::mat4 res = parentTransform * nodeTransform;
             return res;
+        }
+
+        inline static std::string BoneNameBySid(const SkelData& skelData, const std::string& sid)
+        {
+            if (sid == skelData.boneSid) {
+                return skelData.boneName;
+            }
+            for (auto& skChild : skelData.children) {
+                std::string name = BoneNameBySid(skChild, sid);
+                if (name != NO_BONE_MATCH)
+                {
+                    return name;
+                }
+            }
+
+            return NO_BONE_MATCH;
         }
 
 
