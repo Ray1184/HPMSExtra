@@ -65,10 +65,13 @@ hpms::AdvModelItem* hpms::AssimpImporter::LoadModelItem(std::string& path, std::
     glm::mat4 rootTransform = AIToGLMMat4(aiRootNode->mTransformation);
     AnimNode* rootAnimNode = ProcessGraph(aiRootNode, nullptr);
     std::vector<Animation> animations;
-    ProcessAnimations(aiScene, bones, rootAnimNode, rootTransform, animations);
+    std::vector<std::string> boneNames;
+    ProcessAnimations(aiScene, bones, rootAnimNode, rootTransform, animations, boneNames);
+
     hpms::SafeDelete(rootAnimNode);
     advModelItem->SetMeshes(meshes);
     advModelItem->SetAnimations(animations);
+    advModelItem->SetBoneNames(boneNames);
     return advModelItem;
 }
 
@@ -256,8 +259,10 @@ void hpms::AssimpImporter::ProcessMesh(aiMesh* aiMesh, std::vector<hpms::Mesh>& 
 
 }
 
-void hpms::AssimpImporter::BuildAnimationFrames(std::vector<hpms::Bone>& bones, hpms::AnimNode* animRootNode,
-                                                glm::mat4 rootTransform, std::vector<hpms::Frame>& animationFrames)
+void
+hpms::AssimpImporter::BuildAnimationFrames(std::vector<Bone>& bones, AnimNode* animRootNode, glm::mat4 rootTransform,
+                                           std::vector<hpms::Frame>& animationFrames,
+                                           std::vector<std::string>& boneNames)
 {
     unsigned int numFrames = GetAnimationFrames(animRootNode);
     for (int i = 0; i < numFrames; i++)
@@ -274,6 +279,12 @@ void hpms::AssimpImporter::BuildAnimationFrames(std::vector<hpms::Bone>& bones, 
             FrameTransform frameTransform(boneMatrix);
 
 
+            if (i == 0)
+            {
+                boneNames.push_back(bone.boneName);
+            }
+
+
             animatedFrame.frameTransformations.push_back(frameTransform);
         }
         animationFrames.push_back(animatedFrame);
@@ -283,14 +294,15 @@ void hpms::AssimpImporter::BuildAnimationFrames(std::vector<hpms::Bone>& bones, 
 }
 
 void
-hpms::AssimpImporter::ProcessAnimations(const aiScene* aiScen, std::vector<hpms::Bone>& bones, hpms::AnimNode* rootNode,
+hpms::AssimpImporter::ProcessAnimations(const aiScene* aiScene, std::vector<Bone>& bones, AnimNode* rootNode,
                                         glm::mat4 rootTransform,
-                                        std::vector<hpms::Animation>& animations)
+                                        std::vector<hpms::Animation>& animations,
+                                        std::vector<std::string>& boneNames)
 {
-    int numAnimations = aiScen->mNumAnimations;
+    int numAnimations = aiScene->mNumAnimations;
     for (int i = 0; i < numAnimations; i++)
     {
-        aiAnimation* aiAnim = aiScen->mAnimations[i];
+        aiAnimation* aiAnim = aiScene->mAnimations[i];
         unsigned int numChannels = aiAnim->mNumChannels;
         for (int j = 0; j < numChannels; j++)
         {
@@ -300,7 +312,7 @@ hpms::AssimpImporter::ProcessAnimations(const aiScene* aiScen, std::vector<hpms:
             BuildTransFormationMatrices(aiNodAn, animNode);
         }
         std::vector<Frame> frames;
-        BuildAnimationFrames(bones, rootNode, rootTransform, frames);
+        BuildAnimationFrames(bones, rootNode, rootTransform, frames, boneNames);
         Animation anim(aiAnim->mName.data, frames, aiAnim->mDuration);
         animations.push_back(anim);
     }

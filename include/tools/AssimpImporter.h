@@ -154,11 +154,13 @@ namespace hpms
 
 
         static void
-        ProcessAnimations(const aiScene* aiScen, std::vector<Bone>& bones, AnimNode* rootNode, glm::mat4 rootTransform,
-                          std::vector<hpms::Animation>& animations);
+        ProcessAnimations(const aiScene* aiScene, std::vector<Bone>& bones, AnimNode* rootNode, glm::mat4 rootTransform,
+                          std::vector<hpms::Animation>& animations,
+                          std::vector<std::string>& boneNames);
 
         static void BuildAnimationFrames(std::vector<Bone>& bones, AnimNode* animRootNode, glm::mat4 rootTransform,
-                                         std::vector<hpms::Frame>& animationFrames);
+                                         std::vector<hpms::Frame>& animationFrames,
+                                         std::vector<std::string>& boneNames);
 
         inline static AnimNode* ProcessGraph(aiNode* aiNod, AnimNode* parent)
         {
